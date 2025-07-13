@@ -64,7 +64,6 @@ SHEET_NAME = "EmployeCabBookings"
 #     sheet = client.open(SHEET_NAME).sheet1
 #     sheet.append_row(row_data)
 def log_to_google_sheets(row_data):
-    creds_dict = json.loads(st.secrets["GOOGLE_CREDENTIALS"])
     creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, SCOPE)
     client = gspread.authorize(creds)
     sheet = client.open(SHEET_NAME).sheet1
