@@ -76,6 +76,13 @@ def log_to_google_sheets(row_data):
 #     shift_start = st.time_input("Shift Start Time", value=time(22, 0))
 #     shift_end = st.time_input("Shift End Time", value=time(6, 0))
 #     Session state init
+
+# Initialize session state
+if "shift_start" not in st.session_state:
+    st.session_state.shift_start = None
+if "shift_end" not in st.session_state:
+    st.session_state.shift_end = None
+
 with st.form("booking_form"):
     st.subheader("📝 Enter Your Shift Details")
 
@@ -110,7 +117,7 @@ with st.form("booking_form"):
         st.warning("Enter valid end time in HH:MM format.")
         shift_end = None
 
-submitted = st.form_submit_button("🚖 Generate Message & Book")
+    submitted = st.form_submit_button("🚖 Generate Message & Book")
 
 
 
