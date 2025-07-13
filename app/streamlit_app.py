@@ -65,6 +65,18 @@ def log_to_google_sheets(row_data):
     sheet.append_row(row_data)
 
 # ---- FORM ----
+# with st.form("booking_form"):
+#     st.subheader("📝 Enter Your Shift Details")
+
+#     name = st.text_input("Full Name")
+#     emp_id = st.text_input("Employee ID")
+#     mobile = st.text_input("Mobile Number")
+#     pickup_address = st.text_area("Home Address")
+#     shift_date = st.date_input("Shift Date", min_value=date.today())
+#     shift_start = st.time_input("Shift Start Time", value=time(22, 0))
+#     shift_end = st.time_input("Shift End Time", value=time(6, 0))
+#     Session state init
+
 with st.form("booking_form"):
     st.subheader("📝 Enter Your Shift Details")
 
@@ -73,26 +85,26 @@ with st.form("booking_form"):
     mobile = st.text_input("Mobile Number")
     pickup_address = st.text_area("Home Address")
     shift_date = st.date_input("Shift Date", min_value=date.today())
-    # shift_start = st.time_input("Shift Start Time", value=time(22, 0))
-    # shift_end = st.time_input("Shift End Time", value=time(6, 0))
+
     # Session state init
     if "shift_start" not in st.session_state:
-       st.session_state.shift_start = time(22, 0)
+        st.session_state.shift_start = time(22, 0)
     if "shift_end" not in st.session_state:
-       st.session_state.shift_end = (datetime.combine(date.today(), st.session_state.shift_start) + timedelta(hours=9)).time()
+        st.session_state.shift_end = (datetime.combine(date.today(), st.session_state.shift_start) + timedelta(hours=9)).time()
 
-     # Input for shift start
+    # Input for shift start
     shift_start = st.time_input("Shift Start Time", value=st.session_state.shift_start)
+    if shift_start != st.session_state.shift_start:
+        # If user changes start time, update end time suggestion only once
+        st.session_state.shift_end = (datetime.combine(date.today(), shift_start) + timedelta(hours=9)).time()
     st.session_state.shift_start = shift_start
 
-    # Dynamically update shift end if start changes (suggest +9 hrs only once or when changed)
-    st.session_state.shift_end = (datetime.combine(date.today(), shift_start) + timedelta(hours=9)).time()
-
-    # Input for shift end with suggested time
+    # Input for shift end (user can edit if needed)
     shift_end = st.time_input("Shift End Time (Suggested: +9 hrs)", value=st.session_state.shift_end)
     st.session_state.shift_end = shift_end
 
     submitted = st.form_submit_button("Generate Message & Book")
+
 
 # ---- LOGIC + MESSAGE ----
 def is_cab_required(start_time, end_time):
