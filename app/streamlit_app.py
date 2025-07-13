@@ -73,8 +73,16 @@ with st.form("booking_form"):
     mobile = st.text_input("Mobile Number")
     pickup_address = st.text_area("Home Address")
     shift_date = st.date_input("Shift Date", min_value=date.today())
+    # shift_start = st.time_input("Shift Start Time", value=time(22, 0))
+    # shift_end = st.time_input("Shift End Time", value=time(6, 0))
+    # Shift Start input
     shift_start = st.time_input("Shift Start Time", value=time(22, 0))
-    shift_end = st.time_input("Shift End Time", value=time(6, 0))
+
+    # Auto-suggest +9 hours from shift_start
+    default_end = (datetime.combine(date.today(), shift_start) + pd.Timedelta(hours=9)).time()
+    shift_end = st.time_input("Shift End Time (Suggested: +9 hrs)", value=default_end)
+
+    
 
     submitted = st.form_submit_button("Generate Message & Book")
 
