@@ -6,8 +6,6 @@ import gspread
 import json
 from oauth2client.service_account import ServiceAccountCredentials
 
-# from oauth2client.service_account import ServiceAccountCredentials
-
 # ---- DARK THEME SETUP ----
 st.set_page_config(page_title="AI Cab Booking Portal", layout="centered")
 
@@ -58,8 +56,17 @@ st.markdown("Book your cab for night shifts (10 PM to 6 AM) and auto-generate yo
 # SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 # CREDENTIALS_PATH = os.path.join(os.path.dirname(__file__), "..", "google_credentials.json") # "google_credentials.json"
 
+# Define your scope
+SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+
+# Load credentials from Streamlit secrets
 creds_dict = json.loads(st.secrets["GOOGLE_CREDENTIALS"])
+
+# Create credentials object
 creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, SCOPE)
+
+# creds_dict = json.loads(st.secrets["GOOGLE_CREDENTIALS"])
+# creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, SCOPE)
 
 SHEET_NAME = "EmployeCabBookings"
 
