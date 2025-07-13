@@ -18,7 +18,11 @@ GOOGLE_CREDENTIALS = """
   "client_x509_cert_url": "...........",
   "universe_domain": "googleapis.com"
 }
-"""
-<img src="https://ibb.co/nqjJ6pbp" width="800"/>
+"""## 🖼️ Preview Screenshot
+
+![App Preview](https://i.ibb.co/nqjJ6pbp/image.png)
+
+---
+
 [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://cabbookingremainder.streamlit.app)
 
