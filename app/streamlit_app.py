@@ -75,14 +75,22 @@ with st.form("booking_form"):
     shift_date = st.date_input("Shift Date", min_value=date.today())
     # shift_start = st.time_input("Shift Start Time", value=time(22, 0))
     # shift_end = st.time_input("Shift End Time", value=time(6, 0))
-    # Shift Start input
-    shift_start = st.time_input("Shift Start Time", value=time(22, 0))
+    # Session state init
+    if "shift_start" not in st.session_state:
+       st.session_state.shift_start = time(22, 0)
+    if "shift_end" not in st.session_state:
+       st.session_state.shift_end = (datetime.combine(date.today(), st.session_state.shift_start) + timedelta(hours=9)).time()
 
-    # Auto-suggest +9 hours from shift_start
-    default_end = (datetime.combine(date.today(), shift_start) + pd.Timedelta(hours=9)).time()
-    shift_end = st.time_input("Shift End Time (Suggested: +9 hrs)", value=default_end)
+     # Input for shift start
+    shift_start = st.time_input("Shift Start Time", value=st.session_state.shift_start)
+    st.session_state.shift_start = shift_start
 
-    
+    # Dynamically update shift end if start changes (suggest +9 hrs only once or when changed)
+    st.session_state.shift_end = (datetime.combine(date.today(), shift_start) + timedelta(hours=9)).time()
+
+    # Input for shift end with suggested time
+    shift_end = st.time_input("Shift End Time (Suggested: +9 hrs)", value=st.session_state.shift_end)
+    st.session_state.shift_end = shift_end
 
     submitted = st.form_submit_button("Generate Message & Book")
 
