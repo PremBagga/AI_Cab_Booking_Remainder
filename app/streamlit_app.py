@@ -110,7 +110,7 @@ with st.form("booking_form"):
         st.warning("Enter valid end time in HH:MM format.")
         shift_end = None
 
-    submitted = st.form_submit_button("🚖 Generate Message & Book")
+submitted = st.form_submit_button("🚖 Generate Message & Book")
 
 
 
