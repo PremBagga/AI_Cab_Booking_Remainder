@@ -76,7 +76,6 @@ def log_to_google_sheets(row_data):
 #     shift_start = st.time_input("Shift Start Time", value=time(22, 0))
 #     shift_end = st.time_input("Shift End Time", value=time(6, 0))
 #     Session state init
-
 with st.form("booking_form"):
     st.subheader("📝 Enter Your Shift Details")
 
@@ -86,24 +85,29 @@ with st.form("booking_form"):
     pickup_address = st.text_area("Home Address")
     shift_date = st.date_input("Shift Date", min_value=date.today())
 
-    # Session state init
+    # Initialize session state
     if "shift_start" not in st.session_state:
         st.session_state.shift_start = time(22, 0)
     if "shift_end" not in st.session_state:
-        st.session_state.shift_end = (datetime.combine(date.today(), st.session_state.shift_start) + timedelta(hours=9)).time()
+        st.session_state.shift_end = (
+            datetime.combine(date.today(), st.session_state.shift_start) + timedelta(hours=9)
+        ).time()
 
     # Input for shift start
     shift_start = st.time_input("Shift Start Time", value=st.session_state.shift_start)
     if shift_start != st.session_state.shift_start:
-        # If user changes start time, update end time suggestion only once
-        st.session_state.shift_end = (datetime.combine(date.today(), shift_start) + timedelta(hours=9)).time()
+        st.session_state.shift_end = (
+            datetime.combine(date.today(), shift_start) + timedelta(hours=9)
+        ).time()
     st.session_state.shift_start = shift_start
 
-    # Input for shift end (user can edit if needed)
+    # Input for shift end
     shift_end = st.time_input("Shift End Time (Suggested: +9 hrs)", value=st.session_state.shift_end)
     st.session_state.shift_end = shift_end
 
+    # ✅ THIS LINE MUST BE INSIDE THE FORM
     submitted = st.form_submit_button("Generate Message & Book")
+
 
 
 # ---- LOGIC + MESSAGE ----
