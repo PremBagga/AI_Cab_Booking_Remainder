@@ -83,30 +83,34 @@ with st.form("booking_form"):
     emp_id = st.text_input("Employee ID")
     mobile = st.text_input("Mobile Number")
     pickup_address = st.text_area("Home Address")
-    shift_date = st.date_input("Shift Date", min_value=date.today())
+    shift_date = st.date_input("Shift Date")
 
-    # Initialize session state
-    if "shift_start" not in st.session_state:
-        st.session_state.shift_start = time(22, 0)
-    if "shift_end" not in st.session_state:
-        st.session_state.shift_end = (
-            datetime.combine(date.today(), st.session_state.shift_start) + timedelta(hours=9)
-        ).time()
+    # Custom logic to simulate no default time
+    shift_start_raw = st.text_input("Shift Start Time (HH:MM)", value=st.session_state.shift_start.strftime("%H:%M") if st.session_state.shift_start else "")
 
-    # Input for shift start
-    shift_start = st.time_input("Shift Start Time", value=st.session_state.shift_start)
-    if shift_start != st.session_state.shift_start:
-        st.session_state.shift_end = (
-            datetime.combine(date.today(), shift_start) + timedelta(hours=9)
-        ).time()
-    st.session_state.shift_start = shift_start
+    # Parse valid time input
+    try:
+        if shift_start_raw:
+            shift_start = datetime.strptime(shift_start_raw, "%H:%M").time()
+            st.session_state.shift_start = shift_start
+            # Suggest +9 hrs only once
+            if not st.session_state.shift_end:
+                st.session_state.shift_end = (datetime.combine(datetime.today(), shift_start) + timedelta(hours=9)).time()
+        else:
+            shift_start = None
+    except ValueError:
+        st.warning("Enter valid time in HH:MM format.")
+        shift_start = None
 
-    # Input for shift end
-    shift_end = st.time_input("Shift End Time (Suggested: +9 hrs)", value=st.session_state.shift_end)
-    st.session_state.shift_end = shift_end
+    shift_end_raw = st.text_input("Shift End Time (Suggested: +9 hrs)", value=st.session_state.shift_end.strftime("%H:%M") if st.session_state.shift_end else "")
+    try:
+        shift_end = datetime.strptime(shift_end_raw, "%H:%M").time() if shift_end_raw else None
+        st.session_state.shift_end = shift_end
+    except ValueError:
+        st.warning("Enter valid end time in HH:MM format.")
+        shift_end = None
 
-    # ✅ THIS LINE MUST BE INSIDE THE FORM
-    submitted = st.form_submit_button("Generate Message & Book")
+    submitted = st.form_submit_button("🚖 Generate Message & Book")
 
 
 
